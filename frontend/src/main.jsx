@@ -6,7 +6,8 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import { BrowserRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 console.log(import.meta.env);
-console.log(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+console.log("VITE_CLERK_PUBLISHABLE_KEY:", import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
