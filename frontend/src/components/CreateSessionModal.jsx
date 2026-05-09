@@ -1,46 +1,36 @@
-import { Code2Icon, LoaderIcon, PlusIcon } from "lucide-react";
+import { Code2Icon, LoaderIcon, PlusIcon, XIcon } from "lucide-react";
 import { PROBLEMS } from "../data/problems";
 
-function CreateSessionModal({
-  isOpen,
-  onClose,
-  roomConfig,
-  setRoomConfig,
-  onCreateRoom,
-  isCreating,
-}) {
+function CreateSessionModal({ isOpen, onClose, roomConfig, setRoomConfig, onCreateRoom, isCreating }) {
   const problems = Object.values(PROBLEMS);
-
   if (!isOpen) return null;
 
   return (
-    <div className="modal modal-open">
-      <div className="modal-box max-w-2xl">
-        <h3 className="font-bold text-2xl mb-6">Create New Session</h3>
+    <div className="fb-modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="fb-modal">
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+          <h3 className="fb-modal-title" style={{ margin: 0 }}>Create New Session</h3>
+          <button className="fb-btn-ghost" onClick={onClose} style={{ padding: "0.375rem" }}>
+            <XIcon size={16} />
+          </button>
+        </div>
 
-        <div className="space-y-8">
-          {/* PROBLEM SELECTION */}
-          <div className="space-y-2">
-            <label className="label">
-              <span className="label-text font-semibold">Select Problem</span>
-              <span className="label-text-alt text-error">*</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          {/* Problem selection */}
+          <div>
+            <label className="fb-label">
+              Select Problem <span style={{ color: "#ef4444" }}>*</span>
             </label>
-
             <select
-              className="select w-full"
+              className="fb-select"
               value={roomConfig.problem}
               onChange={(e) => {
                 const selectedProblem = problems.find((p) => p.title === e.target.value);
-                setRoomConfig({
-                  difficulty: selectedProblem.difficulty,
-                  problem: e.target.value,
-                });
+                setRoomConfig({ difficulty: selectedProblem.difficulty, problem: e.target.value });
               }}
             >
-              <option value="" disabled>
-                Choose a coding problem...
-              </option>
-
+              <option value="" disabled>Choose a coding problem...</option>
               {problems.map((problem) => (
                 <option key={problem.id} value={problem.title}>
                   {problem.title} ({problem.difficulty})
@@ -49,45 +39,42 @@ function CreateSessionModal({
             </select>
           </div>
 
-          {/* ROOM SUMMARY */}
+          {/* Summary */}
           {roomConfig.problem && (
-            <div className="alert alert-success">
-              <Code2Icon className="size-5" />
+            <div style={{
+              background: "rgba(227,179,51,0.06)",
+              border: "1px solid rgba(227,179,51,0.2)",
+              borderRadius: 10,
+              padding: "1rem 1.125rem",
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "0.625rem"
+            }}>
+              <Code2Icon size={16} color="#e3b333" style={{ marginTop: 2, flexShrink: 0 }} />
               <div>
-                <p className="font-semibold">Room Summary:</p>
-                <p>
-                  Problem: <span className="font-medium">{roomConfig.problem}</span>
-                </p>
-                <p>
-                  Max Participants: <span className="font-medium">2 (1-on-1 session)</span>
-                </p>
+                <p style={{ fontSize: "0.8125rem", fontWeight: 700, color: "#e3b333", marginBottom: "0.25rem" }}>Room Summary</p>
+                <p style={{ fontSize: "0.8rem", color: "#9ca3af" }}>Problem: <span style={{ color: "#fff" }}>{roomConfig.problem}</span></p>
+                <p style={{ fontSize: "0.8rem", color: "#9ca3af" }}>Max Participants: <span style={{ color: "#fff" }}>2 (1-on-1 session)</span></p>
               </div>
             </div>
           )}
         </div>
 
-        <div className="modal-action">
-          <button className="btn btn-ghost" onClick={onClose}>
-            Cancel
-          </button>
-
+        {/* Actions */}
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.625rem", marginTop: "1.75rem" }}>
+          <button className="fb-btn-ghost" onClick={onClose}>Cancel</button>
           <button
-            className="btn btn-primary gap-2"
+            className="fb-btn-primary"
             onClick={onCreateRoom}
             disabled={isCreating || !roomConfig.problem}
           >
-            {isCreating ? (
-              <LoaderIcon className="size-5 animate-spin" />
-            ) : (
-              <PlusIcon className="size-5" />
-            )}
-
-            {isCreating ? "Creating..." : "Create"}
+            {isCreating ? <LoaderIcon size={15} style={{ animation: "spin 0.7s linear infinite" }} /> : <PlusIcon size={15} />}
+            {isCreating ? "Creating..." : "Create Session"}
           </button>
         </div>
       </div>
-      <div className="modal-backdrop" onClick={onClose}></div>
     </div>
   );
 }
+
 export default CreateSessionModal;

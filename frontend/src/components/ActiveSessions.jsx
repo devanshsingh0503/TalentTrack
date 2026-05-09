@@ -1,104 +1,96 @@
 import {
-  ArrowRightIcon,
-  Code2Icon,
-  CrownIcon,
-  SparklesIcon,
-  UsersIcon,
-  ZapIcon,
-  LoaderIcon,
+  ArrowRightIcon, Code2Icon, CrownIcon, SparklesIcon,
+  UsersIcon, ZapIcon, LoaderIcon,
 } from "lucide-react";
 import { Link } from "react-router";
 import { getDifficultyBadgeClass } from "../lib/utils";
 
+function getDifficultyStyle(difficulty) {
+  const d = difficulty?.toLowerCase();
+  if (d === "easy") return "fb-badge fb-badge-easy";
+  if (d === "medium") return "fb-badge fb-badge-medium";
+  if (d === "hard") return "fb-badge fb-badge-hard";
+  return "fb-badge fb-badge-gray";
+}
+
 function ActiveSessions({ sessions, isLoading, isUserInSession }) {
   return (
-    <div className="lg:col-span-2 card bg-base-100 border-2 border-primary/20 hover:border-primary/30 h-full">
-      <div className="card-body">
-        {/* HEADERS SECTION */}
-        <div className="flex items-center justify-between mb-6">
-          {/* TITLE AND ICON */}
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-br from-primary to-secondary rounded-xl">
-              <ZapIcon className="size-5" />
+    <div className="fb-card lg:col-span-2 fb-card-gold" style={{ height: "100%" }}>
+      <div style={{ padding: "1.5rem" }}>
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+            <div style={{ width: 32, height: 32, background: "#e3b333", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <ZapIcon size={14} color="#000" strokeWidth={2.5} />
             </div>
-            <h2 className="text-2xl font-black">Live Sessions</h2>
+            <h2 style={{ fontSize: "1.0625rem", fontWeight: 800, color: "#fff", letterSpacing: "-0.015em" }}>Live Sessions</h2>
           </div>
-
-          <div className="flex items-center gap-2">
-            <div className="size-2 bg-success rounded-full" />
-            <span className="text-sm font-medium text-success">{sessions.length} active</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.375rem" }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
+            <span style={{ fontSize: "0.8rem", color: "#22c55e", fontWeight: 600 }}>{sessions.length} active</span>
           </div>
         </div>
 
-        {/* SESSIONS LIST */}
-        <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+        {/* Sessions */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem", maxHeight: 380, overflowY: "auto", paddingRight: "0.25rem" }}>
           {isLoading ? (
-            <div className="flex items-center justify-center py-20">
-              <LoaderIcon className="size-10 animate-spin text-primary" />
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "4rem 0" }}>
+              <div className="fb-spinner" />
             </div>
           ) : sessions.length > 0 ? (
             sessions.map((session) => (
-              <div
-                key={session._id}
-                className="card bg-base-200 border-2 border-base-300 hover:border-primary/50"
-              >
-                <div className="flex items-center justify-between gap-4 p-5">
-                  {/* LEFT SIDE */}
-                  <div className="flex items-center gap-4 flex-1">
-                    <div className="relative size-14 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                      <Code2Icon className="size-7 text-white" />
-                      <div className="absolute -top-1 -right-1 size-4 bg-success rounded-full border-2 border-base-100" />
+              <div key={session._id} className="fb-card" style={{ border: "1px solid #1f2937" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", padding: "1rem 1.25rem" }}>
+                  {/* Left */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.875rem", flex: 1, minWidth: 0 }}>
+                    <div style={{ position: "relative", width: 44, height: 44, background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <Code2Icon size={18} color="#e3b333" />
+                      <span style={{ position: "absolute", top: -3, right: -3, width: 10, height: 10, background: "#22c55e", borderRadius: "50%", border: "2px solid #111" }} />
                     </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-bold text-lg truncate">{session.problem}</h3>
-                        <span
-                          className={`badge badge-sm ${getDifficultyBadgeClass(
-                            session.difficulty
-                          )}`}
-                        >
-                          {session.difficulty.slice(0, 1).toUpperCase() +
-                            session.difficulty.slice(1)}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem", flexWrap: "wrap" }}>
+                        <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{session.problem}</h3>
+                        <span className={getDifficultyStyle(session.difficulty)}>
+                          {session.difficulty?.slice(0, 1).toUpperCase() + session.difficulty?.slice(1)}
                         </span>
                       </div>
-
-                      <div className="flex items-center gap-4 text-sm opacity-80">
-                        <div className="flex items-center gap-1.5">
-                          <CrownIcon className="size-4" />
-                          <span className="font-medium">{session.host?.name}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <UsersIcon className="size-4" />
-                          <span className="text-xs">{session.participant ? "2/2" : "1/2"}</span>
-                        </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.875rem", fontSize: "0.78rem", color: "#6b7280" }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                          <CrownIcon size={11} color="#e3b333" />
+                          {session.host?.name}
+                        </span>
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                          <UsersIcon size={11} />
+                          {session.participant ? "2/2" : "1/2"}
+                        </span>
                         {session.participant && !isUserInSession(session) ? (
-                          <span className="badge badge-error badge-sm">FULL</span>
+                          <span className="fb-badge fb-badge-red">Full</span>
                         ) : (
-                          <span className="badge badge-success badge-sm">OPEN</span>
+                          <span className="fb-badge fb-badge-green">Open</span>
                         )}
                       </div>
                     </div>
                   </div>
 
+                  {/* Join btn */}
                   {session.participant && !isUserInSession(session) ? (
-                    <button className="btn btn-disabled btn-sm">Full</button>
+                    <button className="fb-btn-ghost" style={{ fontSize: "0.8rem", opacity: 0.4, cursor: "not-allowed" }} disabled>Full</button>
                   ) : (
-                    <Link to={`/session/${session._id}`} className="btn btn-primary btn-sm gap-2">
+                    <Link to={`/session/${session._id}`} className="fb-btn-primary" style={{ padding: "0.5rem 1rem", fontSize: "0.8125rem", whiteSpace: "nowrap" }}>
                       {isUserInSession(session) ? "Rejoin" : "Join"}
-                      <ArrowRightIcon className="size-4" />
+                      <ArrowRightIcon size={13} />
                     </Link>
                   )}
                 </div>
               </div>
             ))
           ) : (
-            <div className="text-center py-16">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl flex items-center justify-center">
-                <SparklesIcon className="w-10 h-10 text-primary/50" />
+            <div className="fb-empty">
+              <div className="fb-empty-icon">
+                <SparklesIcon size={22} />
               </div>
-              <p className="text-lg font-semibold opacity-70 mb-1">No active sessions</p>
-              <p className="text-sm opacity-50">Be the first to create one!</p>
+              <p className="fb-empty-title">No active sessions</p>
+              <p className="fb-empty-desc">Be the first to create one!</p>
             </div>
           )}
         </div>
@@ -106,4 +98,5 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
     </div>
   );
 }
+
 export default ActiveSessions;

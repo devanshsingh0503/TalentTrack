@@ -17,18 +17,13 @@ function DashboardPage() {
   const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
 
   const createSessionMutation = useCreateSession();
-
   const { data: activeSessionsData, isLoading: loadingActiveSessions } = useActiveSessions();
   const { data: recentSessionsData, isLoading: loadingRecentSessions } = useMyRecentSessions();
 
   const handleCreateRoom = () => {
     if (!roomConfig.problem || !roomConfig.difficulty) return;
-
     createSessionMutation.mutate(
-      {
-        problem: roomConfig.problem,
-        difficulty: roomConfig.difficulty.toLowerCase(),
-      },
+      { problem: roomConfig.problem, difficulty: roomConfig.difficulty.toLowerCase() },
       {
         onSuccess: (data) => {
           setShowCreateModal(false);
@@ -42,20 +37,19 @@ function DashboardPage() {
   const recentSessions = recentSessionsData?.sessions || [];
 
   const isUserInSession = (session) => {
-    if (!user.id) return false;
-
+    if (!user?.id) return false;
     return session.host?.clerkId === user.id || session.participant?.clerkId === user.id;
   };
 
   return (
     <>
-      <div className="min-h-screen bg-base-300">
+      <div style={{ minHeight: "100vh", background: "#000", color: "#fff" }}>
         <Navbar />
         <WelcomeSection onCreateSession={() => setShowCreateModal(true)} />
 
-        {/* Grid layout */}
-        <div className="container mx-auto px-6 pb-16">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="fb-container" style={{ padding: "1.5rem 1.5rem 3rem" }}>
+          {/* Top grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: "1.25rem", marginBottom: "1.25rem" }}>
             <StatsCards
               activeSessionsCount={activeSessions.length}
               recentSessionsCount={recentSessions.length}
@@ -67,6 +61,7 @@ function DashboardPage() {
             />
           </div>
 
+          {/* Recent sessions */}
           <RecentSessions sessions={recentSessions} isLoading={loadingRecentSessions} />
         </div>
       </div>
@@ -79,6 +74,14 @@ function DashboardPage() {
         onCreateRoom={handleCreateRoom}
         isCreating={createSessionMutation.isPending}
       />
+
+      <style>{`
+        @media (max-width: 768px) {
+          .fb-container > div[style*="280px"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </>
   );
 }
