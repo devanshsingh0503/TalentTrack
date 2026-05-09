@@ -10,7 +10,7 @@ if (!apiUrl) {
 console.log("Axios baseURL configured to:", apiUrl);
 
 const axiosInstance = axios.create({
-  baseURL: apiUrl || "http://localhost:3000/api",
+  baseURL: apiUrl || "https://talenttrack-kapb.onrender.com/api",
   withCredentials: true,
 });
 
